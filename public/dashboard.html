@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Dashboard</title>
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Home Dashboard</h1>
+        </header>
+        <main>
+            <div class="card-container" onclick="openCard('temperature')">
+                <div class="sensor-card">
+                    <h2>Temperature & Lighting</h2>
+                    <div class="terminal-box">
+                        <div class="terminal-item">
+                            <span class="terminal-label">Temperature</span>
+                            <span class="terminal-value">24°C</span>
+                        </div>
+                        <div class="terminal-item">
+                            <span class="terminal-label">Humidity</span>
+                            <span class="terminal-value">45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-container" onclick="openCard('doors')">
+                <div class="sensor-card">
+                    <h2>Security & Doors</h2>
+                    <div class="terminal-box">
+                        <div class="terminal-item">
+                            <span class="terminal-label">Front Door</span>
+                            <span class="terminal-value" id="door-status">🔒 Locked</span>
+                        </div>
+                        <div class="terminal-item">
+                            <span class="terminal-label">Windows</span>
+                            <span class="terminal-value" id="window-status">📏 Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-container" onclick="openCard('security')">
+                <div class="sensor-card">
+                    <h2>Security</h2>
+                    <div class="terminal-box">
+                        <div class="terminal-item">
+                            <span class="terminal-label">Fire</span>
+                            <span class="terminal-value">Safe</span>
+                        </div>
+                        <div class="terminal-item">
+                            <span class="terminal-label">Rain</span>
+                            <span class="terminal-value">Normal</span>
+                        </div>
+                        <div class="terminal-item">
+                            <span class="terminal-label">Gas</span>
+                            <span class="terminal-value">Safe</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-container" onclick="openCard('motion')">
+                <div class="sensor-card">
+                    <h2>Motion</h2>
+                    <div class="terminal-box">
+                        <div class="terminal-item">
+                            <span class="terminal-label">Motion detected</span>
+                            <span class="terminal-value">None</span>
+                        </div>
+                        <div class="terminal-item">
+                            <span class="terminal-label">Last Time:</span>
+                            <span class="terminal-value">10:32 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="overlay" class="overlay" onclick="closeCard()">
+        <div id="central-card" class="central-card" onclick="event.stopPropagation()">
+            <h2 id="central-card-title" class="card-title"></h2>
+            <div class="info-boxes">
+                <div class="info-box" id="temperatureBox">
+                    <h3>Temperature</h3>
+                    <p id="central-card-temperature" class="info-text"></p>
+                </div>
+                <div class="info-box" id="humidityBox">
+                    <h3>Humidity</h3>
+                    <p id="central-card-humidity" class="info-text"></p>
+                </div>
+                <div class="info-box" id="doorBox">
+                    <h3>Doors</h3>
+                    <p id="central-card-door" class="info-text"></p>
+                </div>
+                <div class="info-box" id="windowBox">
+                    <h3>Windows</h3>
+                    <p id="central-card-window" class="info-text"></p>
+                </div>
+                <div class="info-box" id="fireBox">
+                    <h3>Fire</h3>
+                    <p id="central-card-fire" class="info-text"></p>
+                </div>
+                <div class="info-box" id="rainBox">
+                    <h3>Rain</h3>
+                    <p id="central-card-rain" class="info-text"></p>
+                </div>
+                <div class="info-box" id="gasBox">
+                    <h3>Gas</h3>
+                    <p id="central-card-gas" class="info-text"></p>
+                </div>
+                <div class="info-box" id="motionBox">
+                    <h3>Motion</h3>
+                    <p id="central-card-motion" class="info-text"></p>
+                </div>
+                <div class="info-box" id="last_timeBox">
+                    <h3>Last Time</h3>
+                    <p id="central-card-last_time" class="info-text"></p>
+                </div>
+            </div>
+            <div class="control-panels">
+                <div class="control-panel terminal" id="lighting-control">
+                    <h3>Lighting</h3>
+                    <button onclick="controlLighting('on')">Turn On Lights</button>
+                    <button onclick="controlLighting('off')">Turn Off Lights</button>
+                    <div id="central-display" class="central-display"></div>
+                </div>
+                <div class="control-panel terminal" id="ac-control">
+                    <h3>Air Conditioning</h3>
+                    <button onclick="controlAC('cool')">Cool Mode</button>
+                    <button onclick="controlAC('off')">Turn Off AC</button>
+                    <div id="central-display" class="central-display"></div>
+                </div>
+                <div class="control-panel terminal" id="door-control">
+                    <h3>Door</h3>
+                    <button onclick="doorControl('open')">Open</button>
+                    <button onclick="doorControl('close')">Close</button>
+                    <button onclick="doorControl('closeAll')">Close All Doors</button>
+                </div>
+                <div class="control-panel terminal" id="window-control">
+                    <h3>Window</h3>
+                    <button onclick="windowControl('open')">Open</button>
+                    <button onclick="windowControl('close')">Close</button>
+                    <button onclick="windowControl('closeAll')">Close All Windows</button>
+                </div>
+                <div class="control-panel terminal" id="fire-control">
+                    <h3>Fire</h3>
+                    <button onclick="fireControl('open')">Turn On</button>
+                    <button onclick="fireControl('close')">Turn Off</button>
+                    <button onclick="fireControl('restart')">Restart</button>               
+
+                </div>
+                <div class="control-panel terminal" id="rain-control">
+                    <h3>Rain</h3>
+                    <button onclick="rainControl('open')">Turn On</button>
+                    <button onclick="rainControl('close')">Turn Off</button> 
+                    <button onclick="rainControl('restart')">Restart</button>              
+                </div>
+                <div class="control-panel terminal" id="gas-control">
+                    <h3>Gas</h3>
+                    <button onclick="gasControl('open')">Turn On</button>
+                    <button onclick="gasControl('close')">Turn Off</button>             
+                    <button onclick="gasControl('restart')">Restart</button>               
+            </div>
+            <div class="control-panel terminal" id="motion-control">
+                <h3>Motion</h3>
+                <button onclick="motionControl('open')">Turn On</button>
+                <button onclick="motionControl('close')">Turn Off</button> 
+                <button onclick="motionControl('restart')">Restart</button>              
+            </div>
+            <div class="control-panel terminal" id="last_time-control">
+                <h3>Last Time</h3>
+                <button onclick="last_timeControl('save')">Save</button>
+                <button onclick="last_timeControl('close')">Delete</button>             
+                <button onclick="last_timeControl('restart')">Restart</button>               
+        </div>
+        </div>
+    </div>
+
+    <script src="./js/dashboard.js" defer></script>
+</body>
+</html>
