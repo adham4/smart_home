@@ -1,8 +1,8 @@
 body {
-  background: #292944;  
-  background: linear-gradient(135deg, #292944 0%, #2b2b3c 100%); 
+  background: #292944;
+  background: linear-gradient(135deg, #292944 0%, #2b2b3c 100%);
   color: #ffffff;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,20 +10,22 @@ body {
   margin: 0;
   position: relative;
   overflow: hidden;
+  background-color: red !important;
 }
 
-body::before, body::after {
-  content: '';
+body::before,
+body::after {
+  content: "";
   position: absolute;
-  background-color: #6b6ba1; 
-  width: 250px; 
-  height: 10px; 
+  background-color: #6b6ba1;
+  width: 250px;
+  height: 10px;
 }
 
 body::before {
   top: 0;
   left: 0;
-  transform: rotate(-45deg);  
+  transform: rotate(-45deg);
 }
 
 body::after {
@@ -43,6 +45,11 @@ body::after {
   border: 2px solid #6b6ba1;
   position: relative;
   z-index: 10;
+}
+#login-form {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 h1 {
@@ -89,7 +96,7 @@ button {
 }
 
 button:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;

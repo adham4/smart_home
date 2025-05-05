@@ -39,9 +39,32 @@ exports.getSensorsDataById = async (req, res) => {
 
 exports.createSensorsData = async (req, res) => {
     try {
-        const { sensorType, value, timestamp } = req.body;
-        const newData = await SensorsData.create({ sensorType, value, timestamp });
-        res.status(201).json(newData);
+        const { device_id, readings } = req.body;
+
+        if (!device_id || typeof readings !== 'object' || readings === null) {
+            return res.status(400).json({ error: "Invalid payload. Expected device_id and readings object." });
+        }
+
+        const entries = Object.entries(readings);
+        const createdEntries = [];
+        const thresholds = {
+            temperature: 30,  
+            humidity: 70,  
+            gas: 400,    
+            light: 800,      
+        };
+
+        for (const [data_type, value] of entries) {
+            if (thresholds[data_type] && value > thresholds[data_type]) {
+                const newData = await SensorsData.create({ device_id, data_type, value });
+                createdEntries.push(newData);
+            }
+        }
+
+        res.status(201).json({
+            message: "Sensor data recorded successfully.",
+            data: createdEntries
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -74,4 +97,36 @@ exports.deleteSensorsData = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+exports.getLatestSensorsData = async (req, res) => {
+    try {
+        const { Op } = require('sequelize');
+        const sensorTypes = ['temperature', 'humidity', 'light', 'motion', 'gas', 'flame', 'rain', 'door'];
+        const latestData = {};
+
+        for (const type of sensorTypes) {
+            const data = await SensorsData.findOne({
+                where: { data_type: type },
+                order: [['createdAt', 'DESC']]
+            });
+            if (data) latestData[type] = data.value;
+        }
+
+        res.json(latestData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.controlDevice = (req, res) => {
+    const { deviceId, action } = req.body;
+
+    if (!deviceId || !['on', 'off'].includes(action)) {
+        return res.status(400).json({ error: "Invalid payload. Required: deviceId and action (on/off)" });
+    }
+
+    console.log(`Device ${deviceId} set to ${action}`);
+
+    res.json({ message: `Device ${deviceId} set to ${action}` });
 };

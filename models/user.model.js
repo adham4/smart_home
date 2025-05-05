@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
@@ -10,6 +11,13 @@ const User = sequelize.define('User', {
 }, {
     timestamps: false,
     tableName: 'Users'
+});
+
+User.beforeSave(async (user, options) => {
+  if (user.changed('password')) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
 });
 
 module.exports = User;
