@@ -1,6 +1,6 @@
 const SensorsData = require('../models/sensorsData.model');
 
-exports.getSensorsData = (req, res) => {
+exports.getSensorsData = async (req, res) => {
     const sensorsData = {
         temperature: (20 + Math.random() * 15).toFixed(1), 
         humidity: (30 + Math.random() * 70).toFixed(1), 
@@ -13,7 +13,21 @@ exports.getSensorsData = (req, res) => {
     };
     
     res.json(sensorsData);
+
+    try {
+        const device_id = "FAKE_DEVICE_001"; 
+        const entries = Object.entries(sensorsData);
+        for (const [data_type, value] of entries) {
+            await SensorsData.create({ device_id, data_type, value });
+        }
+        console.log("✅ تم حفظ البيانات العشوائية في قاعدة البيانات");
+    } catch (err) {
+        console.error("❌ خطأ أثناء حفظ البيانات العشوائية:", err.message);
+    }
 };
+
+
+
 // هناخد البيانات الحفيقيه من هنا متمسحش حاجه
 // exports.getAllSensorsData = async (req, res) => {
 //     try {

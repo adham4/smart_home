@@ -35,7 +35,7 @@ app.use("/api/rooms", require("./routes/room.routes"));
 app.use("/api/logs", require("./routes/log.routes"));
 
 sequelize
-sequelize.sync({ force: true })
+sequelize.sync()
 .then(() => {
     console.log("✅ All models were synchronized successfully.");
   })
