@@ -16,5 +16,8 @@
     "body-parser": "^1.20.3",
     "express": "^4.21.2",
     "nocache": "^4.0.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10"
   }
 }
