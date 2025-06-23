@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const SensorsDataController = require('../controllers/sensorsData.controller');
 
-router.get('/', SensorsDataController.getSensorsData);
+router.post('/esp32', SensorsDataController.receiveESP32Data);
 
 router.get('/:id', SensorsDataController.getSensorsDataById);
 
@@ -12,7 +12,7 @@ router.put('/:id', SensorsDataController.updateSensorsData);
 
 router.delete('/:id', SensorsDataController.deleteSensorsData);
 
-router.get('/sensors/latest', SensorsDataController.getLatestSensorsData);
+// router.get('/sensors/latest', SensorsDataController.getLatestSensorsData);
 
 router.post('/device/control', SensorsDataController.controlDevice);
 

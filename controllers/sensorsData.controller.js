@@ -1,42 +1,20 @@
-const SensorsData = require('../models/sensorsData.model');
+const axios = require('axios');
+const sendTelegramAlert = async (message) => {
+  const token = '7754093447:AAEvJ3oWSPMOJ8kRhHAE0A2naGEllV39tmo';
+  const chatId = '1048932090';
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-exports.getSensorsData = async (req, res) => {
-    const sensorsData = {
-        temperature: (20 + Math.random() * 15).toFixed(1), 
-        humidity: (30 + Math.random() * 70).toFixed(1), 
-        light: Math.floor(Math.random() * 1000), 
-        motion: Math.random() > 0.5, 
-        gas: Math.floor(Math.random() * 500), 
-        flame: Math.random() > 0.7, 
-        rain: Math.random() > 0.8,
-        door: Math.random() > 0.5 
-    };
-    
-    res.json(sensorsData);
-
-    try {
-        const device_id = "FAKE_DEVICE_001"; 
-        const entries = Object.entries(sensorsData);
-        for (const [data_type, value] of entries) {
-            await SensorsData.create({ device_id, data_type, value });
-        }
-        console.log("✅ تم حفظ البيانات العشوائية في قاعدة البيانات");
-    } catch (err) {
-        console.error("❌ خطأ أثناء حفظ البيانات العشوائية:", err.message);
-    }
+  try {
+    await axios.post(url, {
+      chat_id: chatId,
+      text: message
+    });
+    console.log("✅ Telegram alert sent.");
+  } catch (err) {
+    console.error("❌ Failed to send Telegram alert:", err.message);
+  }
 };
-
-
-
-// هناخد البيانات الحفيقيه من هنا متمسحش حاجه
-// exports.getAllSensorsData = async (req, res) => {
-//     try {
-//         const data = await SensorsData.findAll();
-//         res.json(data);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
+const SensorsData = require('../models/sensorsData.model');
 
 exports.getSensorsDataById = async (req, res) => {
     try {
@@ -143,4 +121,43 @@ exports.controlDevice = (req, res) => {
     console.log(`Device ${deviceId} set to ${action}`);
 
     res.json({ message: `Device ${deviceId} set to ${action}` });
+};
+// استقبال البيانات من ESP32 وحفظها بالكامل بدون شروط
+exports.receiveESP32Data = async (req, res) => {
+    try {
+        const { device_id, readings } = req.body;
+
+        if (!device_id || typeof readings !== 'object' || readings === null) {
+            return res.status(400).json({ error: "Invalid payload. Expected device_id and readings object." });
+        }
+
+        const entries = Object.entries(readings);
+        const savedEntries = [];
+
+        for (const [data_type, value] of entries) {
+            const entry = await SensorsData.create({ device_id, data_type, value });
+            savedEntries.push(entry);
+
+            // إرسال تنبيهات Telegram حسب القيم
+            if (data_type === "gas" && value > 400) {
+                await sendTelegramAlert("⚠️ ارتفاع نسبة الغاز!");
+            }
+
+            if (data_type === "flame" && value < 3000) {
+                await sendTelegramAlert("🔥 تم رصد حريق!");
+            }
+
+            if (data_type === "rain" && value === true) {
+                await sendTelegramAlert("🌧️ المطر بدأ!");
+            }
+        }
+
+        res.status(201).json({
+            message: "ESP32 data saved successfully.",
+            data: savedEntries
+        });
+    } catch (error) {
+        console.error("❌ Error saving ESP32 data:", error.message);
+        res.status(500).json({ error: error.message });
+    }
 };

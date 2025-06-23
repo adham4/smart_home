@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
 
+  const API_BASE_URL = "http://localhost:3000/api";
+
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -8,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value.trim();
 
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -16,8 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.token) {
         console.log("🟢 تسجيل الدخول ناجح! تحويل تلقائي للـ Dashboard...");
+        localStorage.setItem("token", data.token);
         window.location.href = "/dashboard.html";
       } else {
         console.error("❌ فشل تسجيل الدخول: " + data.message);

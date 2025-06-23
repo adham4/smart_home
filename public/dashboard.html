@@ -29,17 +29,17 @@
                 </div>
             </div>
 
-            <div class="card-container" onclick="openCard('doors')">
+            <div class="card-container" onclick="openCard('doors')" data-card="doors">
                 <div class="sensor-card">
-                    <h2>Security & Doors</h2>
+                    <h2>Doors & Windows</h2>
                     <div class="terminal-box">
                         <div class="terminal-item">
-                            <span class="terminal-label">Front Door</span>
-                            <span class="terminal-value" id="door-status"> Locked</span>
+                            <span class="terminal-label">Door</span>
+                            <span class="terminal-value" id="door-status"> -- </span>
                         </div>
                         <div class="terminal-item">
                             <span class="terminal-label">Windows</span>
-                            <span class="terminal-value" id="window-status"> Active</span>
+                            <span class="terminal-value" id="window-status"> -- </span>
                         </div>
                     </div>
                 </div>
@@ -52,10 +52,6 @@
                         <div class="terminal-item">
                             <span class="terminal-label">Fire</span>
                             <span class="terminal-value" id="card-fire">Safe</span>
-                        </div>
-                        <div class="terminal-item">
-                            <span class="terminal-label">Rain</span>
-                            <span class="terminal-value" id="card-rain">Normal</span>
                         </div>
                         <div class="terminal-item">
                             <span class="terminal-label">Gas</span>
@@ -75,8 +71,7 @@
                         </div>
                         <div class="terminal-item">
                             <span class="terminal-label">Last Time:</span>
-                            <span class="terminal-value">10:32 PM</span>
-                        </div>
+                            <span class="terminal-value" id="card-motion-last-time">--</span>                        </div>
                     </div>
                 </div>
             </div>
@@ -106,10 +101,6 @@
                 <div class="info-box" id="fireBox">
                     <h3>Fire</h3>
                     <p id="central-card-fire" class="info-text"></p>
-                </div>
-                <div class="info-box" id="rainBox">
-                    <h3>Rain</h3>
-                    <p id="central-card-rain" class="info-text"></p>
                 </div>
                 <div class="info-box" id="gasBox">
                     <h3>Gas</h3>
@@ -155,12 +146,6 @@
                     <button onclick="fireControl('close')">Turn Off</button>
                     <button onclick="fireControl('restart')">Restart</button>               
 
-                </div>
-                <div class="control-panel terminal" id="rain-control">
-                    <h3>Rain</h3>
-                    <button onclick="rainControl('open')">Turn On</button>
-                    <button onclick="rainControl('close')">Turn Off</button> 
-                    <button onclick="rainControl('restart')">Restart</button>              
                 </div>
                 <div class="control-panel terminal" id="gas-control">
                     <h3>Gas</h3>
